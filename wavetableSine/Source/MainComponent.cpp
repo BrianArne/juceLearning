@@ -11,11 +11,26 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
-    // Make sure you set the size of the component after
-    // you add any child components.
     setSize (800, 600);
+    freqSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
+    freqSlider.setRange(50.0f, 500.0f);
+    freqSlider.setValue(200.0f);
+    freqSlider.addListener(this);
+    freqSlider.setTextValueSuffix("Hz");
+    addAndMakeVisible(freqSlider);
 
-    // Some platforms require permissions to open input channels so request that here
+    freqLabel.setText("Frequency", dontSendNotification);
+    freqLabel.attachToComponent(&freqSlider, true);
+
+    ampSlider.setSliderStyle(Slider::SliderStyle::LinearHorizontal);
+    ampSlider.setRange(0.0f, 1.0f);
+    ampSlider.setValue(.25f);
+    ampSlider.addListener(this);
+    ampLabel.setText("Amplitude", dontSendNotification);
+    ampLabel.attachToComponent(&ampSlider, true);
+    addAndMakeVisible(ampSlider);
+
+
     if (RuntimePermissions::isRequired (RuntimePermissions::recordAudio)
         && ! RuntimePermissions::isGranted (RuntimePermissions::recordAudio))
     {
@@ -24,7 +39,6 @@ MainComponent::MainComponent()
     }
     else
     {
-        // Specify the number of input and output channels that we want to open
         setAudioChannels (2, 2);
     }
 }
@@ -38,11 +52,12 @@ MainComponent::~MainComponent()
 //==============================================================================
 void MainComponent::prepareToPlay (int samplesPerBlockExpected, double sampleRate)
 {
-  amplitude = 0.25;
-  frequency = 880;
+  amplitude = ampSlider.getValue();
+  frequency = freqSlider.getValue();
   phase = 0;
   wtSize = 1024;
   increment = frequency * wtSize / sampleRate;
+  currentSampleRate = sampleRate;
 
   //One cycle of a sine wave
   for(int i = 0; i < wtSize; i++){
@@ -58,33 +73,39 @@ void MainComponent::getNextAudioBlock (const AudioSourceChannelInfo& bufferToFil
   for (int sample = 0; sample < bufferToFill.numSamples; sample++){
     leftSpeaker[sample] = waveTable[(int)phase] * amplitude;
     rightSpeaker[sample] = waveTable[(int)phase] * amplitude;
-    phase = fmod((phase + increment), wtSize);
-
+    updateFrequency();
   }
-
 }
 
 void MainComponent::releaseResources()
 {
-    // This will be called when the audio device stops, or when it is being
-    // restarted due to a setting change.
-
-    // For more details, see the help for AudioProcessor::releaseResources()
 }
+
 
 //==============================================================================
 void MainComponent::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
 
-    // You can add your drawing code here!
 }
 
 void MainComponent::resized()
 {
-    // This is called when the MainContentComponent is resized.
-    // If you add any child components, this is where you should
-    // update their positions.
+  const int labelSpace = 100;
+  freqSlider.setBounds(labelSpace, 20, getWidth() - 100, 20);
+  ampSlider.setBounds(labelSpace, 50, getWidth() - 100, 20);
+}
+
+void MainComponent::sliderValueChanged(Slider* slider){
+  if(slider == &freqSlider){
+    frequency = freqSlider.getValue();
+  }else if(slider == &ampSlider){
+    amplitude = ampSlider.getValue();
+  }
+}
+
+void MainComponent::updateFrequency(){
+  increment = frequency * wtSize / currentSampleRate;
+  phase = fmod((phase + increment), wtSize);
 }
 
