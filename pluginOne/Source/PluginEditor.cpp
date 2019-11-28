@@ -17,7 +17,13 @@ PluginOneAudioProcessorEditor::PluginOneAudioProcessorEditor (PluginOneAudioProc
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (200, 400);
+    gainSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
+    gainSlider.setRange(0.0, 1.0);
+    gainSlider.setValue(0.5);
+    gainSlider.addListener(this);
+    gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 25);
+    addAndMakeVisible(gainSlider);
 }
 
 PluginOneAudioProcessorEditor::~PluginOneAudioProcessorEditor()
@@ -29,14 +35,18 @@ void PluginOneAudioProcessorEditor::paint (Graphics& g)
 {
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-
-    g.setColour (Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 }
 
 void PluginOneAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    gainSlider.setBounds(getLocalBounds());
 }
+
+void PluginOneAudioProcessorEditor::sliderValueChanged(Slider* slider){
+  if(slider == &gainSlider){
+    processor.rawVolume = gainSlider.getValue();
+  }
+}
+
