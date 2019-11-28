@@ -95,6 +95,7 @@ void PluginOneAudioProcessor::changeProgramName (int index, const String& newNam
 //==============================================================================
 void PluginOneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+  rawVolume = 0.5f;
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
@@ -135,7 +136,7 @@ void PluginOneAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     
-    rawVolume = 0.015f;
+    //rawVolume = 0.25;
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());

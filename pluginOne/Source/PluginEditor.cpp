@@ -19,8 +19,8 @@ PluginOneAudioProcessorEditor::PluginOneAudioProcessorEditor (PluginOneAudioProc
     // editor's size to whatever you need it to be.
     setSize (200, 400);
     gainSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
-    gainSlider.setRange(0.0, 1.0);
-    gainSlider.setValue(0.5);
+    gainSlider.setRange(-48.0, 0.0);
+    gainSlider.setValue(-1.0f);
     gainSlider.addListener(this);
     gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 25);
     addAndMakeVisible(gainSlider);
@@ -46,7 +46,8 @@ void PluginOneAudioProcessorEditor::resized()
 
 void PluginOneAudioProcessorEditor::sliderValueChanged(Slider* slider){
   if(slider == &gainSlider){
-    processor.rawVolume = gainSlider.getValue();
+    processor.rawVolume = pow(10, gainSlider.getValue() / 20);
+    //processor.rawVolume = gainSlider.getValue();
   }
 }
 
