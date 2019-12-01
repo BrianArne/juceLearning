@@ -59,6 +59,7 @@ public:
     //amplitude
     double rawVolume;
     AudioProcessorValueTreeState treeState;
+    float previousGain;
 
 
 private:

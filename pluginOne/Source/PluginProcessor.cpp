@@ -101,6 +101,7 @@ void PluginOneAudioProcessor::changeProgramName (int index, const String& newNam
 void PluginOneAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
   rawVolume = 0.5f;
+  previousGain = pow(10, *treeState.getRawParameterValue(GAIN_ID) / 20);
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 }
@@ -140,28 +141,21 @@ void PluginOneAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    
-    //rawVolume = 0.25;
 
+    float currentGain = pow(10, *treeState.getRawParameterValue(GAIN_ID) / 20);
+
+     
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    // Make sure to reset the state if your inner loop is processing
-    // the samples and the outer loop is handling the channels.
-    // Alternatively, you can process the samples with the channels
-    // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
+    //Gain ramp
+    if(currentGain == previousGain){
+      buffer.applyGain(currentGain);
+    }else{
+      buffer.applyGainRamp(0, buffer.getNumSamples(), previousGain, currentGain);
+      previousGain = currentGain;
+    }
 
-        for(int sample = 0; sample < buffer.getNumSamples(); sample++){
-          channelData[sample] = buffer.getSample(channel, sample) * rawVolume; 
-        }
-
-        // ..do something to the data...
-    } 
 } 
 //==============================================================================
 bool PluginOneAudioProcessor::hasEditor() const
