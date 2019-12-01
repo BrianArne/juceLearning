@@ -21,9 +21,13 @@ PluginOneAudioProcessor::PluginOneAudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+     rawVolume(-5.0f),
+     treeState(*this, nullptr)
 #endif
 {
+  NormalisableRange<float> gainRange(-48.0f, 0.0f);
+  treeState.createAndAddParameter(GAIN_ID, GAIN_NAME, GAIN_NAME, gainRange, 0.5, nullptr, nullptr);
 }
 
 PluginOneAudioProcessor::~PluginOneAudioProcessor()
@@ -152,7 +156,7 @@ void PluginOneAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         auto* channelData = buffer.getWritePointer (channel);
 
         for(int sample = 0; sample < buffer.getNumSamples(); sample++){
-          channelData[sample] = buffer.getSample(channel, sample) * rawVolume;
+          channelData[sample] = buffer.getSample(channel, sample) * rawVolume; 
         }
 
         // ..do something to the data...

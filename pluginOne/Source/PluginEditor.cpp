@@ -18,9 +18,13 @@ PluginOneAudioProcessorEditor::PluginOneAudioProcessorEditor (PluginOneAudioProc
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (200, 400);
+
+    sliderAttach = new AudioProcessorValueTreeState::SliderAttachment(processor.treeState, GAIN_ID, gainSlider);
+
+
     gainSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
     gainSlider.setRange(-48.0, 0.0);
-    gainSlider.setValue(-1.0f);
+    gainSlider.setValue(-5.0f);
     gainSlider.addListener(this);
     gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 25);
     addAndMakeVisible(gainSlider);
@@ -28,6 +32,7 @@ PluginOneAudioProcessorEditor::PluginOneAudioProcessorEditor (PluginOneAudioProc
 
 PluginOneAudioProcessorEditor::~PluginOneAudioProcessorEditor()
 {
+  delete sliderAttach;
 }
 
 //==============================================================================

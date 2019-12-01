@@ -7,10 +7,11 @@
 
   ==============================================================================
 */
-
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#define GAIN_ID "gain"
+#define GAIN_NAME "Gain"
 
 //==============================================================================
 /**
@@ -57,6 +58,8 @@ public:
 
     //amplitude
     double rawVolume;
+    AudioProcessorValueTreeState treeState;
+
 
 private:
     //==============================================================================

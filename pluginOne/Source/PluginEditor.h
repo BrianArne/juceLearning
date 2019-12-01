@@ -29,11 +29,13 @@ public:
     void resized() override;
     void sliderValueChanged(Slider* slider) override;
 
+    AudioProcessorValueTreeState::SliderAttachment* sliderAttach;
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     PluginOneAudioProcessor& processor;
+    //ScopedPointer <AudioProcessorValueTreeState::SliderAttachment> sliderAttach;
     Slider gainSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginOneAudioProcessorEditor)
