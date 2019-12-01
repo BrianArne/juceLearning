@@ -1,4 +1,4 @@
 *.*.swp
 */Builds/MacOSX/build/Debug/*.app/Contents/MacOS/*
 .DS_Store
-*/Builds/MacOSX/build/Debug/*
+*/Builds/MacOSX/build/*/Debug/*
