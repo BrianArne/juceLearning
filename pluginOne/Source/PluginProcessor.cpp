@@ -22,12 +22,13 @@ PluginOneAudioProcessor::PluginOneAudioProcessor()
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        ),
-     rawVolume(-5.0f),
+     //rawVolume(-5.0f),
      treeState(*this, nullptr)
 #endif
 {
   NormalisableRange<float> gainRange(-48.0f, 0.0f);
   treeState.createAndAddParameter(GAIN_ID, GAIN_NAME, GAIN_NAME, gainRange, 0.5, nullptr, nullptr);
+  treeState.state = ValueTree("savedParams");
 }
 
 PluginOneAudioProcessor::~PluginOneAudioProcessor()
@@ -176,15 +177,24 @@ AudioProcessorEditor* PluginOneAudioProcessor::createEditor()
 //==============================================================================
 void PluginOneAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    // You should use this method to store your parameters in the memory block.
+    // You should use this method to store your treeState in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
+    //XmlElement* xml  = new XmlElement(treeState.state.createXml);
+    std::shared_ptr<XmlElement> xml (treeState.state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void PluginOneAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
+    // You should use this method to restore your treeState from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+  std::shared_ptr<XmlElement> theParams (getXmlFromBinary(data, sizeInBytes));
+  if(theParams != nullptr){
+    if(theParams->hasTagName(treeState.state.getType())){
+      treeState.state = ValueTree::fromXml(*theParams);
+    }
+  }
 }
 
 //==============================================================================

@@ -24,7 +24,7 @@ PluginOneAudioProcessorEditor::PluginOneAudioProcessorEditor (PluginOneAudioProc
 
     gainSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
     gainSlider.setRange(-48.0, 0.0);
-    gainSlider.setValue(-5.0f);
+    //gainSlider.setValue(-5.0f);
     gainSlider.addListener(this);
     gainSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 25);
     addAndMakeVisible(gainSlider);

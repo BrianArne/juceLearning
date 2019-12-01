@@ -2,4 +2,4 @@
 */Builds/MacOSX/build/Debug/*.app/Contents/MacOS/*
 .DS_Store
 
-*/Debug/*
+/Debug/*
