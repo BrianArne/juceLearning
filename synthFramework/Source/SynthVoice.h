@@ -10,6 +10,7 @@
 
 #pragma once
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "maximilian.h"
 #include "SynthSound.h"
 
 class SynthVoice  : public SynthesiserVoice
@@ -21,13 +22,19 @@ class SynthVoice  : public SynthesiserVoice
     }
 
     void startNote (int midiNoteNumber, float velocity, SynthesiserSound* sound, int currentPitchWheelPosition){
+      
+      env1.trigger = 1;
+      level = velocity;
       frequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber, 440);
       std::cout << midiNoteNumber << std::endl;
         
     }
 
     void stopNote (float velocity, bool allowTailOff){
-      clearCurrentNote();
+      env1.trigger = 0;
+      allowTailOff = true;
+      if(velocity == 0)
+        clearCurrentNote();
     }
 
     void pitchWheelMoved (int newPitchWheel){
@@ -40,12 +47,37 @@ class SynthVoice  : public SynthesiserVoice
 
     void renderNextBlock (AudioBuffer<float> &coutputBuffer, int startSample, int numSamples){
 
+      //Init settings for envelope
+      env1.setAttack(2000);
+      env1.setDecay(500);
+      env1.setSustain(0.8);
+      env1.setRelease(2000);
+
+
+      for(int sample = 0; sample < numSamples; ++sample){
+        // The osc
+        double theWave = osc1.saw(frequency);
+        // routing osc into the envelope
+        double theSound = env1.adsr(theWave, env1.trigger) * level;
+        // Filter
+        double filteredSound = filter1.lores(theSound, 200, 0.1);
+
+        for(int channel = 0; channel < coutputBuffer.getNumChannels(); ++channel){
+          coutputBuffer.addSample(channel, startSample, filteredSound);
+        }
+        ++startSample;
+      }
+
     }
 
 
   private:
     double level;
     double frequency;
+
+    maxiOsc osc1;
+    maxiEnv env1;
+    maxiFilter filter1;
 
 
 
