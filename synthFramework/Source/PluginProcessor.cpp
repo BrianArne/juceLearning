@@ -21,9 +21,19 @@ SynthFrameworkAudioProcessor::SynthFrameworkAudioProcessor()
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+     attackTime(0.1f),
+     tree(*this, nullptr)
 #endif
 {
+  // This is to map our range to a 0-1 range that the host can understand
+  NormalisableRange<float> attackParam(0.1f, 5000);
+  NormalisableRange<float> releaseParam(0.1f, 5000);
+
+  // Definition of params to share between host and plugin
+  tree.createAndAddParameter("attack", "Attack", "Attack", attackParam, 0.1f, nullptr, nullptr);
+  tree.createAndAddParameter("release", "Release", "Release", releaseParam, 0.1f, nullptr, nullptr);
+
   mySynth.clearVoices();
 
   for(int i = 0; i < 5; i++){
@@ -141,6 +151,13 @@ bool SynthFrameworkAudioProcessor::isBusesLayoutSupported (const BusesLayout& la
 
 void SynthFrameworkAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
+  
+  for(int i = 0; i < mySynth.getNumVoices(); i++){
+    if(myVoice = dynamic_cast<SynthVoice*>(mySynth.getVoice(i))){
+      myVoice->getParam(tree.getRawParameterValue("attack"), tree.getRawParameterValue("release"));
+    }
+  }
+
   buffer.clear();
 
   mySynth.renderNextBlock(buffer, midiMessages, 0, buffer.getNumSamples());

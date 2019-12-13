@@ -16,20 +16,27 @@
 //==============================================================================
 /**
 */
-class SynthFrameworkAudioProcessorEditor  : public AudioProcessorEditor
+class SynthFrameworkAudioProcessorEditor  : public AudioProcessorEditor,
+                                            public Slider::Listener
 {
 public:
-    SynthFrameworkAudioProcessorEditor (SynthFrameworkAudioProcessor&);
+      SynthFrameworkAudioProcessorEditor (SynthFrameworkAudioProcessor&);
     ~SynthFrameworkAudioProcessorEditor();
 
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    void sliderValueChanged(Slider* slider) override;
 
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     SynthFrameworkAudioProcessor& processor;
+    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> attackTree;
+    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> releaseTree;
+
+    Slider attackSlider;
+    Slider releaseSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SynthFrameworkAudioProcessorEditor)
 };
