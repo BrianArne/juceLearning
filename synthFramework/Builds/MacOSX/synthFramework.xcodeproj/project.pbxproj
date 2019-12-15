@@ -77,6 +77,14 @@
 			isa = PBXBuildFile;
 			fileRef = A227A6172B7BCB00CB8A67DE;
 		};
+		187D5C060A585E8AA2527C23 = {
+			isa = PBXBuildFile;
+			fileRef = 45235C3DE0969483F282EA66;
+		};
+		772E61E72A381C5DE60F03DB = {
+			isa = PBXBuildFile;
+			fileRef = EA9E680936844EE71BF3A6D6;
+		};
 		9AD5D0CB54AD090A90EB096B = {
 			isa = PBXBuildFile;
 			fileRef = 0B1BCECCB9618B2A7DC16688;
@@ -345,6 +353,13 @@
 			path = System/Library/Frameworks/AudioUnit.framework;
 			sourceTree = SDKROOT;
 		};
+		45235C3DE0969483F282EA66 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = Envelope.cpp;
+			path = ../../Source/Envelope.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		46FE67E8FE3AD5A59DB7BF36 = {
 			isa = PBXFileReference;
 			lastKnownFileType = file;
@@ -434,6 +449,13 @@
 			lastKnownFileType = sourcecode.cpp.objcpp;
 			name = "include_juce_core.mm";
 			path = "../../JuceLibraryCode/include_juce_core.mm";
+			sourceTree = "SOURCE_ROOT";
+		};
+		7420832F6727AC7425E3117F = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = Envelope.h;
+			path = ../../Source/Envelope.h;
 			sourceTree = "SOURCE_ROOT";
 		};
 		7747DA1F599A99E3DCAFDA4C = {
@@ -723,6 +745,13 @@
 			path = ../../Source/PluginEditor.h;
 			sourceTree = "SOURCE_ROOT";
 		};
+		EA9E680936844EE71BF3A6D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = Oscillator.cpp;
+			path = ../../Source/Oscillator.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
 		ED8D9F6C842120C0CFD1C58D = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -763,6 +792,13 @@
 			lastKnownFileType = sourcecode.cpp.cpp;
 			name = PluginEditor.cpp;
 			path = ../../Source/PluginEditor.cpp;
+			sourceTree = "SOURCE_ROOT";
+		};
+		F7AB79D6ECE001928915C3FA = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = Oscillator.h;
+			path = ../../Source/Oscillator.h;
 			sourceTree = "SOURCE_ROOT";
 		};
 		F8390FFC7236C24EFC2603B3 = {
@@ -810,6 +846,10 @@
 		C17D1EF58FEAA510A000C025 = {
 			isa = PBXGroup;
 			children = (
+				45235C3DE0969483F282EA66,
+				7420832F6727AC7425E3117F,
+				EA9E680936844EE71BF3A6D6,
+				F7AB79D6ECE001928915C3FA,
 				0B1BCECCB9618B2A7DC16688,
 				50CD3DCA2FF4585D803B7FC6,
 				F765301B711CD3F372899E44,
@@ -1730,6 +1770,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				187D5C060A585E8AA2527C23,
+				772E61E72A381C5DE60F03DB,
 				9AD5D0CB54AD090A90EB096B,
 				B3B52DEB629778A95EDCC06A,
 				3226EFAF524FB2B4306381D0,

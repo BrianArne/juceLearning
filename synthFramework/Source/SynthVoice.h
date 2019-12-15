@@ -22,9 +22,11 @@ class SynthVoice  : public SynthesiserVoice
       return dynamic_cast<SynthSound*>(sound) != nullptr;
     }
 
-    void getParam(float* attack, float* release)
+    void getParam(float* attack, float* decay, float* sustain, float* release)
     {
       env1.setAttack(double(*attack));
+      env1.setDecay(double(*decay));
+      env1.setAttack(double(*sustain));
       env1.setRelease(double(*release));
     }
 
@@ -56,19 +58,9 @@ class SynthVoice  : public SynthesiserVoice
 
     void renderNextBlock (AudioBuffer<float> &coutputBuffer, int startSample, int numSamples)
     {
-      //Init settings for envelope
-      env1.setDecay(500);
-      env1.setSustain(0.8);
-
       for(int sample = 0; sample < numSamples; ++sample){
-        // The osc
-        double theWave = osc1.saw(frequency);
-
         // routing osc into the envelope
-        double theSound = env1.adsr(theWave, env1.trigger) * level;
-
-        // Filter
-        //double filteredSound = filter1.lores(theSound, 200, 0.1);
+        double theSound = env1.adsr(setOscType(), env1.trigger);
 
         for(int channel = 0; channel < coutputBuffer.getNumChannels(); ++channel){
           coutputBuffer.addSample(channel, startSample, theSound);
@@ -77,15 +69,32 @@ class SynthVoice  : public SynthesiserVoice
       }
     }
 
+    // Sets user selected osc type to the member var theWave
+    void getOscType(float* selection)
+    {
+      theWave = *selection;
+    }
+
+    double setOscType(){
+      if(theWave == 0){
+        return osc1.sinewave(frequency);
+      }
+      if(theWave == 1){
+        return osc1.saw(frequency);
+      }
+      if(theWave == 2){
+        return osc1.square(frequency);
+      }
+      return osc1.sinewave(frequency);
+    }
+
   private:
     double level;
     double frequency;
+    int theWave;
 
     maxiOsc osc1;
     maxiEnv env1;
     maxiFilter filter1;
-
-
-
 };
 
