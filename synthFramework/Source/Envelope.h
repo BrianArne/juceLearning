@@ -16,8 +16,7 @@
 //==============================================================================
 /*
 */
-class Envelope    : public Component,
-                    public Slider::Listener
+class Envelope    : public Component
 {
 public:
     Envelope(SynthFrameworkAudioProcessor&);
@@ -26,21 +25,18 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
-    void sliderValueChanged(Slider* slider) override;
-    
-
 private:
     SynthFrameworkAudioProcessor& processor;
-
-    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> attackTree;
-    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> decayTree;
-    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> sustainTree;
-    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> releaseTree;
 
     Slider attackSlider;
     Slider decaySlider;
     Slider sustainSlider;
     Slider releaseSlider;
+
+    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> attackVal;
+    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> decayVal;
+    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> sustainVal;
+    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> releaseVal;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Envelope)
 };

@@ -22,7 +22,7 @@ class SynthVoice  : public SynthesiserVoice
       return dynamic_cast<SynthSound*>(sound) != nullptr;
     }
 
-    void getParam(float* attack, float* decay, float* sustain, float* release)
+    void getEnvelopeParams(float* attack, float* decay, float* sustain, float* release)
     {
       env1.setAttack(double(*attack));
       env1.setDecay(double(*decay));
@@ -56,14 +56,18 @@ class SynthVoice  : public SynthesiserVoice
 
     }
 
+    // 
+    double setEnvelope()
+    {
+      return env1.adsr(setOscType(), env1.trigger);
+    }
+
+
     void renderNextBlock (AudioBuffer<float> &coutputBuffer, int startSample, int numSamples)
     {
       for(int sample = 0; sample < numSamples; ++sample){
-        // routing osc into the envelope
-        double theSound = env1.adsr(setOscType(), env1.trigger);
-
         for(int channel = 0; channel < coutputBuffer.getNumChannels(); ++channel){
-          coutputBuffer.addSample(channel, startSample, theSound);
+          coutputBuffer.addSample(channel, startSample, setFilterParams() * 0.5f);
         }
         ++startSample;
       }
@@ -75,23 +79,54 @@ class SynthVoice  : public SynthesiserVoice
       theWave = *selection;
     }
 
+    // Change to case statement
     double setOscType(){
-      if(theWave == 0){
-        return osc1.sinewave(frequency);
+      double sample1;
+      switch(theWave){
+        case 0:
+          sample1 = osc1.square(frequency);
+          break;
+        case 1:
+          sample1 = osc1.saw(frequency);
+          break;
+        default:
+          sample1 = osc1.sinewave(frequency);
       }
-      if(theWave == 1){
-        return osc1.saw(frequency);
+      return sample1;
+    }
+
+    // Sets user selected filter type to the member var filterChoice;
+    void getFilterParams(float* filterType, float* filterCutoff, float* filterRes)
+    {
+      filterChoice = *filterType;
+      cutoff = *filterCutoff;
+      resonance = *filterRes;
+    }
+
+    // Change to case statement
+    double setFilterParams()
+    {
+      if(filterChoice == 0){
+        return filter1.lores(setEnvelope(), cutoff, resonance);
       }
-      if(theWave == 2){
-        return osc1.square(frequency);
+      if(filterChoice == 1){
+        return filter1.hires(setEnvelope(), cutoff, resonance);
       }
-      return osc1.sinewave(frequency);
+      if(filterChoice == 2){
+        return filter1.bandpass(setEnvelope(), cutoff, resonance);
+      }else{
+        return filter1.lores(setEnvelope(), cutoff, resonance);
+      }
     }
 
   private:
     double level;
     double frequency;
     int theWave;
+
+    int filterChoice;
+    int resonance;
+    float cutoff;
 
     maxiOsc osc1;
     maxiEnv env1;

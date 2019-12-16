@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="dhqplL" name="synthFramework" projectType="audioplug" jucerVersion="5.4.5"
-              pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn">
+              pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
+              headerPath="/Users/brianarne/Projects/Maximilian">
   <MAINGROUP id="kfMR92" name="synthFramework">
     <GROUP id="{09E14171-4631-EFF1-53DF-40709EEB6DC4}" name="Source">
+      <FILE id="XwUevJ" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
+      <FILE id="rNXktM" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
       <FILE id="CH75Ja" name="Envelope.cpp" compile="1" resource="0" file="Source/Envelope.cpp"/>
       <FILE id="GXSXLf" name="Envelope.h" compile="0" resource="0" file="Source/Envelope.h"/>
       <FILE id="nuLAN7" name="Oscillator.cpp" compile="1" resource="0" file="Source/Oscillator.cpp"/>

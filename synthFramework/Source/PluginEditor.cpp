@@ -13,12 +13,13 @@
 
 //==============================================================================
 SynthFrameworkAudioProcessorEditor::SynthFrameworkAudioProcessorEditor (SynthFrameworkAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p), oscGui(p), envGui(p)
+    : AudioProcessorEditor (&p), processor (p), oscGui(p), envGui(p), filterGui(p)
 {
-    setSize (400, 200);
+    setSize(600, 200);
 
     addAndMakeVisible(&oscGui);
     addAndMakeVisible(&envGui);
+    addAndMakeVisible(&filterGui);
 }
 
 SynthFrameworkAudioProcessorEditor::~SynthFrameworkAudioProcessorEditor()
@@ -41,5 +42,6 @@ void SynthFrameworkAudioProcessorEditor::resized()
   const int componentHeight = 200;
   Rectangle<int> area = getLocalBounds();
   oscGui.setBounds(area.removeFromLeft(componentWidth).removeFromTop(componentHeight));
+  filterGui.setBounds(area.removeFromLeft(componentWidth).removeFromTop(componentHeight));
   envGui.setBounds(area.removeFromLeft(componentWidth).removeFromTop(componentHeight));
 }

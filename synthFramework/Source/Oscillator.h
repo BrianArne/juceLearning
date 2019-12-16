@@ -16,8 +16,7 @@
 //==============================================================================
 /*
 */
-class Oscillator    : public Component,
-                      public ComboBox::Listener
+class Oscillator    : public Component
 {
 public:
     Oscillator(SynthFrameworkAudioProcessor&);
@@ -25,9 +24,6 @@ public:
 
     void paint (Graphics&) override;
     void resized() override;
-
-    // Virtual function from ComboBox::Listener that must have an implementation
-    void comboBoxChanged(ComboBox*) override;
 
 private:
     ComboBox oscMenu;
