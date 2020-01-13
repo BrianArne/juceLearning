@@ -29,7 +29,7 @@ Filter::Filter(SynthFrameworkAudioProcessor& p) : processor(p)
   filterCutoff.setTextBoxStyle(Slider::NoTextBox, false, 0, 0);
   addAndMakeVisible(&filterCutoff);
   filterVal = new AudioProcessorValueTreeState::SliderAttachment(processor.tree, "filterCutoff", filterCutoff);
-  filterCutoff.setSkewFactorFromMidPoint(1000.0);
+  //filterCutoff.setSkewFactorFromMidPoint(1000.0);
 
   filterRes.setSliderStyle(Slider::SliderStyle::RotaryHorizontalVerticalDrag);
   filterRes.setRange(1, 5);

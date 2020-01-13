@@ -21,12 +21,11 @@ class SynthVoice  : public SynthesiserVoice
     {
       return dynamic_cast<SynthSound*>(sound) != nullptr;
     }
-
     void getEnvelopeParams(float* attack, float* decay, float* sustain, float* release)
     {
       env1.setAttack(double(*attack));
       env1.setDecay(double(*decay));
-      env1.setAttack(double(*sustain));
+      env1.setSustain(double(*sustain));
       env1.setRelease(double(*release));
     }
 
@@ -35,15 +34,14 @@ class SynthVoice  : public SynthesiserVoice
       env1.trigger = 1;
       level = velocity;
       frequency = MidiMessage::getMidiNoteInHertz(midiNoteNumber, 440);
-      std::cout << midiNoteNumber << std::endl;
+      std::cout << "Midi Note: " << midiNoteNumber << std::endl;
     }
 
     void stopNote (float velocity, bool allowTailOff)
     {
       env1.trigger = 0;
       allowTailOff = true;
-      if(velocity == 0)
-        clearCurrentNote();
+      clearCurrentNote();
     }
 
     void pitchWheelMoved (int newPitchWheel)
@@ -65,9 +63,11 @@ class SynthVoice  : public SynthesiserVoice
 
     void renderNextBlock (AudioBuffer<float> &coutputBuffer, int startSample, int numSamples)
     {
+      auto sampleRate = getSampleRate();
       for(int sample = 0; sample < numSamples; ++sample){
         for(int channel = 0; channel < coutputBuffer.getNumChannels(); ++channel){
-          coutputBuffer.addSample(channel, startSample, setFilterParams() * 0.5f);
+          auto myVal = setEnvelope();
+          coutputBuffer.addSample(channel, startSample, setEnvelope() * 0.5f);
         }
         ++startSample;
       }
@@ -84,9 +84,11 @@ class SynthVoice  : public SynthesiserVoice
       double sample1;
       switch(theWave){
         case 0:
+          sample1 = osc1.sinewave(frequency);
+        case 1:
           sample1 = osc1.square(frequency);
           break;
-        case 1:
+        case 2:
           sample1 = osc1.saw(frequency);
           break;
         default:
@@ -106,17 +108,19 @@ class SynthVoice  : public SynthesiserVoice
     // Change to case statement
     double setFilterParams()
     {
-      if(filterChoice == 0){
-        return filter1.lores(setEnvelope(), cutoff, resonance);
+      double sample1;
+      switch(filterChoice){
+        case 0:
+          sample1 = filter1.lores(setEnvelope(), cutoff, resonance);
+          break;
+        case 1:
+          sample1 = filter1.hires(setEnvelope(), cutoff, resonance);
+          break;
+        case 2:
+          sample1 = filter1.bandpass(setEnvelope(), cutoff, resonance);
+          break;
       }
-      if(filterChoice == 1){
-        return filter1.hires(setEnvelope(), cutoff, resonance);
-      }
-      if(filterChoice == 2){
-        return filter1.bandpass(setEnvelope(), cutoff, resonance);
-      }else{
-        return filter1.lores(setEnvelope(), cutoff, resonance);
-      }
+      return sample1;
     }
 
   private:

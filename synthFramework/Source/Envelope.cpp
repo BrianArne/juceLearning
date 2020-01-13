@@ -19,14 +19,13 @@ Envelope::Envelope(SynthFrameworkAudioProcessor& p) : processor(p)
     // Attack Slider
     attackSlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
     attackSlider.setRange(0.1f, 5000.0f);
-    attackSlider.setValue(0.1f);
-    attackSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
-    addAndMakeVisible(&attackSlider);
+    attackSlider.setValue(1000.1f);
+    attackSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0); addAndMakeVisible(&attackSlider);
     
     // Decay Slider
     decaySlider.setSliderStyle(Slider::SliderStyle::LinearVertical);
     decaySlider.setRange(0.1f, 2000.0f);
-    decaySlider.setValue(1.0f);
+    decaySlider.setValue(1000.0f);
     decaySlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
     addAndMakeVisible(&decaySlider);
 
